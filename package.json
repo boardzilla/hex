@@ -1,10 +1,11 @@
 {
   "name": "hex",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@boardzilla/devtools": "0.0.21",
+    "@boardzilla/core": "^0.0.25",
+    "@boardzilla/devtools": "^0.0.23",
     "graphology": "^0.25.4",
     "graphology-simple-path": "^0.2.0",
     "react": "^18.2",

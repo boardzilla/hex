@@ -4,7 +4,8 @@
 #play-area {
   .HexBoard svg {
     width: 100%;
-    top: 9.6%;
+    top: 50%;
+    transform: translateY(-50%);
     position: absolute;
   }
   .Cell > div {
