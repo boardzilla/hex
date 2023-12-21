@@ -1,22 +1,20 @@
 import {
   createGame,
-  createBoardClass,
   createBoardClasses,
   Player,
+  Board,
   playerActions,
-  whileLoop,
+  loop,
   eachPlayer,
 } from '@boardzilla/core';
 
 import graphology from 'graphology';
 import {allSimplePaths} from 'graphology-simple-path';
 
-export class HexPlayer extends Player {
+export class HexPlayer extends Player<HexPlayer, HexBoard> {
 };
 
-const Board = createBoardClass(HexPlayer);
-
-class HexBoard extends Board {
+class HexBoard extends Board<HexPlayer, HexBoard> {
   isConnected(player: HexPlayer) {
     const graph = new graphology.UndirectedGraph();
     for (const cell of this.all(Cell, {player})) {
@@ -51,7 +49,7 @@ class HexBoard extends Board {
   }
 }
 
-const { Space } = createBoardClasses(HexBoard);
+const { Space } = createBoardClasses<HexPlayer, HexBoard>();
 
 export class Cell extends Space {
   row: number;
@@ -61,10 +59,10 @@ export class Cell extends Space {
   }
 }
 
-export default createGame(HexPlayer, HexBoard, board => {
-  board.registerClasses(Cell);
+export default createGame(HexPlayer, HexBoard, game => {
+  const { board, action } = game;
 
-  const action = board.action;
+  board.registerClasses(Cell);
 
   board.createGrid({
     rows: board.gameSetting('size'),
@@ -72,30 +70,25 @@ export default createGame(HexPlayer, HexBoard, board => {
     style: 'hex-inverse'
   }, Cell, 'cell', (row, column) => ({ row, column }));
 
-  board.defineActions({
+  game.defineActions({
     place: player => action({
       prompt: 'Place your stone',
     }).chooseOnBoard(
       'space', board.all(Cell, {player: undefined})
-    ).do(({ space }) => space.player = player)
+    ).do(({ space }) => { space.player = player })
   });
 
-  board.defineFlow(() => (
-    whileLoop({
-      while: () => true,
-      do: eachPlayer({
-        name: 'player',
-        do: [
-          playerActions({
-            actions: {
-              place: null
-            }
-          }),
-          ({ player }) => {
-            if (board.isConnected(player)) board.finish(player);
-          }
-        ]
-      })
+  game.defineFlow(loop(
+    eachPlayer({
+      name: 'player',
+      do: [
+        playerActions({
+          actions: [ 'place' ]
+        }),
+        ({ player }) => {
+          if (board.isConnected(player)) game.finish(player);
+        }
+      ]
     })
   ));
 });

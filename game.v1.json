@@ -1,10 +1,6 @@
 {
-  "name": "hex",
-  "friendlyName": "Hex",
-  "description": "",
   "minPlayers": 2,
   "maxPlayers": 2,
-  "image": "image.jpg",
   "ui": {
     "root": ".",
     "build": {

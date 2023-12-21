@@ -8,10 +8,12 @@ await esbuild.build({
   format: 'iife',
   globalName: 'game',
   loader: {
+    '.jpg': 'file',
     '.png': 'file',
     '.svg': 'file',
+    '.webp': 'file',
     '.scss': 'css',
-    '.ogg': 'dataurl'
+    '.ogg': 'dataurl',
   },
   keepNames: true,
   outdir: 'build/game',
