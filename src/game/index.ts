@@ -3,10 +3,8 @@ import {
   createBoardClasses,
   Player,
   Board,
-  playerActions,
-  loop,
-  eachPlayer,
 } from '@boardzilla/core';
+
 
 import graphology from 'graphology';
 import {allSimplePaths} from 'graphology-simple-path';
@@ -31,7 +29,7 @@ class HexBoard extends Board<HexPlayer, HexBoard> {
         if (!graph.hasNode(cell.id())) graph.addNode(cell.id());
         if (!graph.hasEdge('start', cell.id())) graph.addEdge('start', cell.id());
       }
-      for (const cell of this.all(Cell, {row: this.gameSetting('size')})) {
+      for (const cell of this.all(Cell, {row: this.game.setting('size')})) {
         if (!graph.hasNode(cell.id())) graph.addNode(cell.id());
         if (!graph.hasEdge('end', cell.id())) graph.addEdge('end', cell.id());
       }
@@ -40,7 +38,7 @@ class HexBoard extends Board<HexPlayer, HexBoard> {
         if (!graph.hasNode(cell.id())) graph.addNode(cell.id());
         if (!graph.hasEdge('start', cell.id())) graph.addEdge('start', cell.id());
       }
-      for (const cell of this.all(Cell, {column: this.gameSetting('size')})) {
+      for (const cell of this.all(Cell, {column: this.game.setting('size')})) {
         if (!graph.hasNode(cell.id())) graph.addNode(cell.id());
         if (!graph.hasEdge('end', cell.id())) graph.addEdge('end', cell.id());
       }
@@ -61,14 +59,18 @@ export class Cell extends Space {
 
 export default createGame(HexPlayer, HexBoard, game => {
   const { board, action } = game;
+  const { playerActions, loop, eachPlayer, everyPlayer, whileLoop } = game.flowCommands;
+
 
   board.registerClasses(Cell);
 
   board.createGrid({
-    rows: board.gameSetting('size'),
-    columns: board.gameSetting('size'),
+    rows: game.setting('size'),
+    columns: game.setting('size'),
     style: 'hex-inverse'
-  }, Cell, 'cell', (row, column) => ({ row, column }));
+  }, Cell, 'cell', 
+  // (row, column) => ({ row, column })
+  );
 
   game.defineActions({
     place: player => action({
