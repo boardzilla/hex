@@ -4,8 +4,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@boardzilla/core": "^0.0.50",
-    "@boardzilla/devtools": "^0.0.45",
+    "@boardzilla/core": "^0.1.3",
     "graphology": "^0.25.4",
     "graphology-simple-path": "^0.2.0",
     "react": "^18.2",
