@@ -59,8 +59,6 @@ export default createGame(HexPlayer, Hex, game => {
   const { action } = game;
   const { playerActions, loop, eachPlayer } = game.flowCommands;
 
-  game.registerClasses(Cell, HexGrid);
-
   game.create(HexGrid, 'hex', {
     rows: game.setting('size'),
     columns: game.setting('size'),
