@@ -1,17 +1,18 @@
 import {
   createGame,
-  createGameClasses,
   Player,
+  Space,
+  HexGrid,
   Game,
 } from '@boardzilla/core';
 
 import graphology from 'graphology';
 import {allSimplePaths} from 'graphology-simple-path';
 
-export class HexPlayer extends Player<HexPlayer, Hex> {
+export class HexPlayer extends Player<Hex, HexPlayer> {
 };
 
-class Hex extends Game<HexPlayer, Hex> {
+class Hex extends Game<Hex, HexPlayer> {
   isConnected(player: HexPlayer) {
     const graph = new graphology.UndirectedGraph();
     for (const cell of this.all(Cell, {player})) {
@@ -46,9 +47,7 @@ class Hex extends Game<HexPlayer, Hex> {
   }
 }
 
-const { Space } = createGameClasses<HexPlayer, Hex>();
-
-export class Cell extends Space {
+export class Cell extends Space<Hex> {
   row: number;
   column: number;
   id() {
@@ -60,19 +59,18 @@ export default createGame(HexPlayer, Hex, game => {
   const { action } = game;
   const { playerActions, loop, eachPlayer } = game.flowCommands;
 
-  game.registerClasses(Cell);
-
-  game.createGrid({
+  game.create(HexGrid, 'hex', {
     rows: game.setting('size'),
     columns: game.setting('size'),
-    style: 'hex-inverse'
-  }, Cell, 'cell');
+    axes: 'east-by-southeast',
+    space: Cell
+  });
 
   game.defineActions({
     place: player => action({
       prompt: 'Place your stone',
     }).chooseOnBoard(
-      'space', game.all(Cell, {player: undefined})
+      'space', $.hex.all(Space, {player: undefined})
     ).do(({ space }) => { space.player = player })
   });
 

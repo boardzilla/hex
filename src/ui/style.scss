@@ -1,7 +1,18 @@
-#game {
-}
-
 #play-area {
+  .profile-badge {
+    position: absolute;
+    font-size: 2rem;
+    &[data-position="1"] {
+      left: 2%;
+      bottom: 16%;
+    }
+
+    &[data-position="2"] {
+      right: 2%;
+      top: 16%;
+    }
+  }
+
   .Hex svg {
     width: 100%;
     top: 50%;
@@ -29,7 +40,4 @@
       background: #ccc;
     }
   }
-}
-
-.player-controls {
 }
